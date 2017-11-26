@@ -1,119 +1,90 @@
 package model;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
-import model.wavFile.WavFile;
-
 public class MicrophoneReader {
-	private Model model;
-	private TargetDataLine microphone = null;
-	private AudioFormat format;
-	private byte[] b;
+	long RECORD_TIME = 5000;  // 1 minute
+	 
+    // path of the wav file
+    File wavFile = new File("RecordAudio.wav");
+ 
+    // format of audio file
+    AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
+ 
+    // the line from which audio data is captured
+    TargetDataLine line;
 	
-	public MicrophoneReader(Model model) {
-		this.model = model;
-		initialize();
-		read();
-		writeWav();
+	public MicrophoneReader(long RECORD_TIME) {
+		this.RECORD_TIME = RECORD_TIME;
 	}
-	
-	private void initialize() {
-		
-		format = new AudioFormat(44100, 16, 1, true, true);
-		
-		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-		if(!AudioSystem.isLineSupported(info))
-			System.out.println("Error");
-	}
-	
-	private void read() {
-		try {
-			microphone = (TargetDataLine)AudioSystem.getTargetDataLine(format);
-			microphone.open(format);
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		}
-		
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int numBytesRead;
-		
-		byte[] data = new byte[microphone.getBufferSize() / 5];
-		
-		microphone.start();
-		
-		long startSec = System.currentTimeMillis();
-		
-		while(System.currentTimeMillis() - startSec < 5000) {
-			numBytesRead = microphone.read(data, 0, data.length);
-			out.write(data, 0, numBytesRead);
-		}
-		
-		b = out.toByteArray();
-		
-		microphone.close();
-	}
-	
-	private void writeWav() {
-		try
-		{
-			int sampleRate = 44100;		// Samples per second
-			double duration = 5.0;		// Seconds
-
-			// Calculate the number of frames required for specified duration
-			long numFrames = (long)(duration * sampleRate);
-
-			// Create a wav file with the name specified as the first argument
-			WavFile wavFile = WavFile.newWavFile(new File("test.wav"), 1, numFrames, 16, sampleRate);
-
-			// Create a buffer of 100 frames
-			double[][] buffer = new double[1][100];
-
-			// Initialise a local frame counter
-			long frameCounter = 0;
-
-			// Loop until all frames written
-			int counter = 1;
-			while (frameCounter < numFrames)
-			{
-				// Determine how many frames to write, up to a maximum of the buffer size
-				long remaining = wavFile.getFramesRemaining();
-				int toWrite = (remaining > 100) ? 100 : (int) remaining;
-
-				// Fill the buffer, one tone per channel
-				for (int s=0 ; s<toWrite ; s++, frameCounter++)
-				{
-//					buffer[0][s] = b[s * counter];
-					double m = Math.sin(2.0 * Math.PI * 500 * frameCounter / sampleRate);
-					System.out.println(m);
-					buffer[1][s] = m;
-				}
-
-				// Write the buffer
-				wavFile.writeFrames(buffer, toWrite);
-				counter++;
-			}
-//			
-//			for(int i = 0; i < numFrames; i++) {
-//				buffer[0][i] = b[i];
-//			}
-//			
-//			wavFile.writeFrames(buffer, (int)numFrames);
-
-			// Close the wavFile
-			wavFile.close();
-			
-			System.out.println("Zavrsio");
-		}
-		catch (Exception e)
-		{
-			System.err.println(e);
-		}
-	}
+    
+    /**
+     * Defines an audio format
+     */
+    AudioFormat getAudioFormat() {
+        float sampleRate = 16000;
+        int sampleSizeInBits = 8;
+        int channels = 2;
+        boolean signed = true;
+        boolean bigEndian = true;
+        AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits,
+                                             channels, signed, bigEndian);
+        return format;
+    }
+ 
+    /**
+     * Captures the sound and record into a WAV file
+     */
+    void start() {
+        try {
+            AudioFormat format = getAudioFormat();
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+ 
+            // checks if system supports the data line
+            if (!AudioSystem.isLineSupported(info)) {
+                System.out.println("Line not supported");
+                System.exit(0);
+            }
+            line = (TargetDataLine) AudioSystem.getLine(info);
+            line.open(format);
+            line.start();   // start capturing
+ 
+            System.out.println("Start capturing...");
+ 
+            AudioInputStream ais = new AudioInputStream(line);
+ 
+            System.out.println("Start recording...");
+ 
+            // start recording
+            AudioSystem.write(ais, fileType, wavFile);
+ 
+        } catch (LineUnavailableException ex) {
+            ex.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+ 
+    /**
+     * Closes the target data line to finish capturing and recording
+     */
+    void finish() {
+        line.stop();
+        line.close();
+        System.out.println("Finished");
+    }
+ 
+    /**
+     * Entry to run the program
+     */
+   
 }
