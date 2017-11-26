@@ -26,10 +26,12 @@ public class Controller {
 						String current = view.getWavChooserDialog().getWavSounds().getSelectionModel().getSelectedItem()
 								.toString();
 
-						if (current.equals(Variables.RECORDED_WAV)) {
+						if (current.equals(Variables.RECORD_WAV)) {
 							view.getWavChooserDialog().getBtRead().setText(Variables.RECORD);
+							view.getWavChooserDialog().getTfDuration().setDisable(false);
 						} else {
 							view.getWavChooserDialog().getBtRead().setText(Variables.READ);
+							view.getWavChooserDialog().getTfDuration().setDisable(true);
 						}
 					}
 				});
@@ -40,12 +42,23 @@ public class Controller {
 				String current = view.getWavChooserDialog().getWavSounds().getSelectionModel().getSelectedItem()
 						.toString();
 
-				if (current.equals(Variables.RECORDED_WAV)) {
-					model.startRecording();
+				if (current.equals(Variables.RECORD_WAV)) {
+					long duration = Long.parseLong(view.getWavChooserDialog().getTfDuration().getText());
+					model.startRecording(duration);
 					System.out.println("Reading wav");
+					model.startReadingWav(Variables.RECORDED_AUDIO);
+					if(model.isRead())
+						view.getWavChooserDialog().getBtExport().setDisable(false);
 				} else {
 					System.out.println("Reading wav");
 				}
+			}
+		});
+		
+		view.getWavChooserDialog().getBtExport().setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				System.out.println("Do export");
 			}
 		});
 	}

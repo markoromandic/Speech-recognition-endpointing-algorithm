@@ -11,11 +11,11 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
-public class MicrophoneReader {
-	long RECORD_TIME = 5000; // 1 minute
+import variables.Variables;
 
+public class MicrophoneReader {
 	// path of the wav file
-	File wavFile = new File("RecordAudio.wav");
+	File wavFile = new File(Variables.AUDIO_LOC + Variables.RECORDED_AUDIO + Variables.WAV);
 
 	// format of audio file
 	AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
@@ -23,17 +23,15 @@ public class MicrophoneReader {
 	// the line from which audio data is captured
 	TargetDataLine line;
 
-	public MicrophoneReader(long RECORD_TIME) {
-		this.RECORD_TIME = RECORD_TIME;
-	}
+	public MicrophoneReader() {	}
 
 	/**
 	 * Defines an audio format
 	 */
 	AudioFormat getAudioFormat() {
-		float sampleRate = 16000;
+		float sampleRate = 44100;
 		int sampleSizeInBits = 8;
-		int channels = 2;
+		int channels = 1;
 		boolean signed = true;
 		boolean bigEndian = true;
 		AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
@@ -85,5 +83,5 @@ public class MicrophoneReader {
 	/**
 	 * Entry to run the program
 	 */
-
+	
 }

@@ -4,32 +4,38 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import model.Model;
-import model.wavFile.WavFile;
 import variables.Variables;
 
 public class WavChooserDialog extends HBox{
 	private ComboBox<String> wavSounds;
 	private Button btRead, btExport;
+	private TextField tfDuration;
 	
 	public WavChooserDialog() {
 		initilaize();
 	}
 	
-	private void initilaize() {
+	public void initilaize() {
 		wavSounds = new ComboBox<>();
 		wavSounds.setMaxWidth(Integer.MAX_VALUE);
 		wavSounds.getItems().addAll(Variables.WAV_FILES);
 		wavSounds.getSelectionModel().selectFirst();
 		wavSounds.setMinWidth(100);
 		
+		tfDuration = new TextField();
+		tfDuration.setMinWidth(50);
+		tfDuration.setMaxWidth(50);
+		tfDuration.setDisable(true);
+		
 		btRead = new Button(Variables.READ);
 		btRead.setMinWidth(100);
 		
 		btExport = new Button(Variables.EXPORT);
 		btExport.setMinWidth(100);
+		btExport.setDisable(true);
 		
 		setSpacing(15);
 		setPadding(new Insets(15));
@@ -37,7 +43,7 @@ public class WavChooserDialog extends HBox{
 		setHgrow(wavSounds, Priority.ALWAYS);
 		setAlignment(Pos.CENTER);
 		
-		getChildren().addAll(wavSounds, btRead, btExport);
+		getChildren().addAll(wavSounds, tfDuration, btRead, btExport);
 	}
 
 	public ComboBox<String> getWavSounds() {
@@ -50,5 +56,9 @@ public class WavChooserDialog extends HBox{
 	
 	public Button getBtExport() {
 		return btExport;
+	}
+	
+	public TextField getTfDuration() {
+		return tfDuration;
 	}
 }

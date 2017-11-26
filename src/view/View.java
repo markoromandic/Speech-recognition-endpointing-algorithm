@@ -21,20 +21,20 @@ public class View extends VBox {
 		initializeStage();
 		initalize();
 	}
-	
+
 	private void initializeStage() {
 		primaryStage.setTitle("Wave reader RAF 2.0");
 		primaryStage.getIcons().add(new Image(Variables.ICON));
 	}
-	
-	private void initalize() {
+
+	public void initalize() {
 		wavChooserDialog = new WavChooserDialog();
-		
+
 		getChildren().addAll(wavChooserDialog);
 		primaryStage.setScene(new Scene(this, 1250, 750));
 		primaryStage.show();
 	}
-	
+
 	public WavChooserDialog getWavChooserDialog() {
 		return wavChooserDialog;
 	}

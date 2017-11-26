@@ -1,18 +1,29 @@
 package model;
 
 public class Model {
-	MicrophoneReader microphoneReader;
+	
+	private boolean read;
 	
 	public Model() {
-		microphoneReader = new MicrophoneReader(5000);
+		read = false;
 	}
 	
-	public void startRecording() {
-		Sleeper sleeper = new Sleeper(microphoneReader);
+	public void startRecording(long duration) {
+		MicrophoneReader microphoneReader = new MicrophoneReader();
+		Sleeper sleeper = new Sleeper(microphoneReader, duration);
 		
 		Thread stopper = new Thread(sleeper);
 		stopper.start();
 		
 		microphoneReader.start();
+	}
+	
+	public void startReadingWav(String name) {
+		ReadWav.readWav(name);
+		read = true;
+	}
+	
+	public boolean isRead() {
+		return read;
 	}
 }
