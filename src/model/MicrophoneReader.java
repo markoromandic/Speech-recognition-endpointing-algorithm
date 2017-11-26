@@ -50,7 +50,7 @@ public class MicrophoneReader {
 		
 		long startSec = System.currentTimeMillis();
 		
-		while(System.currentTimeMillis() - startSec < 2000) {
+		while(System.currentTimeMillis() - startSec < 5000) {
 			numBytesRead = microphone.read(data, 0, data.length);
 			out.write(data, 0, numBytesRead);
 		}
@@ -64,7 +64,7 @@ public class MicrophoneReader {
 		try
 		{
 			int sampleRate = 44100;		// Samples per second
-			double duration = 2.0;		// Seconds
+			double duration = 5.0;		// Seconds
 
 			// Calculate the number of frames required for specified duration
 			long numFrames = (long)(duration * sampleRate);
@@ -73,34 +73,38 @@ public class MicrophoneReader {
 			WavFile wavFile = WavFile.newWavFile(new File("test.wav"), 1, numFrames, 16, sampleRate);
 
 			// Create a buffer of 100 frames
-			double[][] buffer = new double[1][(int)numFrames];
+			double[][] buffer = new double[1][100];
 
 			// Initialise a local frame counter
 			long frameCounter = 0;
 
 			// Loop until all frames written
-//			while (frameCounter < numFrames)
-//			{
-//				// Determine how many frames to write, up to a maximum of the buffer size
-//				long remaining = wavFile.getFramesRemaining();
-//				int toWrite = (remaining > 100) ? 100 : (int) remaining;
-//
-//				// Fill the buffer, one tone per channel
-//				for (int s=0 ; s<toWrite ; s++, frameCounter++)
-//				{
-//					buffer[0][s] = Math.sin(2.0 * Math.PI * 400 * frameCounter / sampleRate);
-////					buffer[1][s] = Math.sin(2.0 * Math.PI * 500 * frameCounter / sampleRate);
-//				}
-//
-//				// Write the buffer
-//				wavFile.writeFrames(buffer, toWrite);
-//			}
-			
-			for(int i = 0; i < numFrames; i++) {
-				buffer[0][i] = b[i];
+			int counter = 1;
+			while (frameCounter < numFrames)
+			{
+				// Determine how many frames to write, up to a maximum of the buffer size
+				long remaining = wavFile.getFramesRemaining();
+				int toWrite = (remaining > 100) ? 100 : (int) remaining;
+
+				// Fill the buffer, one tone per channel
+				for (int s=0 ; s<toWrite ; s++, frameCounter++)
+				{
+//					buffer[0][s] = b[s * counter];
+					double m = Math.sin(2.0 * Math.PI * 500 * frameCounter / sampleRate);
+					System.out.println(m);
+					buffer[1][s] = m;
+				}
+
+				// Write the buffer
+				wavFile.writeFrames(buffer, toWrite);
+				counter++;
 			}
-			
-			wavFile.writeFrames(buffer, (int)numFrames);
+//			
+//			for(int i = 0; i < numFrames; i++) {
+//				buffer[0][i] = b[i];
+//			}
+//			
+//			wavFile.writeFrames(buffer, (int)numFrames);
 
 			// Close the wavFile
 			wavFile.close();
