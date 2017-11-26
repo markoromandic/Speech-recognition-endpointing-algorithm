@@ -1,4 +1,4 @@
-package main;
+package core;
 
 import controller.Controller;
 import javafx.application.Application;
@@ -13,9 +13,9 @@ public class Main extends Application{
 	}
 
 	@Override
-	public void start(Stage arg0) throws Exception {
+	public void start(Stage primaryStage) throws Exception {
 		Model model = new Model();
-		View view = new View(model);
+		View view = new View(model, primaryStage);
 		Controller controller = new Controller(model, view);
 	}
 

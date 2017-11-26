@@ -5,10 +5,9 @@ public class Model {
 	
 	public Model() {
 		microphoneReader = new MicrophoneReader(5000);
-		startRecording();
 	}
 	
-	private void startRecording() {
+	public void startRecording() {
 		Sleeper sleeper = new Sleeper(microphoneReader);
 		
 		Thread stopper = new Thread(sleeper);
