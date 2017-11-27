@@ -22,48 +22,30 @@ public class Model {
 	}
 
 	public void startReadingWav(String wavName, String frameFuncs) {
-		frames = ReadWav.readWav(wavName, frameFuncs);
+		ReadWav rw = new ReadWav();
+		frames = rw.readWav(wavName, frameFuncs);
 		read = true;
-		double meanValue = calcualteMeanOfFrames();
-		double standardDeviation = calculateStandardDeviation(meanValue);
+		double meanValue = rw.calcualteMeanOfFrames();
+		double standardDeviation = rw.calculateStandardDeviation(meanValue);
 
 		double borderValue = meanValue + 2 * standardDeviation;
+
+		// System.out.println("MEAN: " + meanValue);
+		// System.out.println("DEVIATION: " + standardDeviation);
+		// System.out.println("BORDER VALUE: " + borderValue);
 
 		setSignals(borderValue);
 
 	}
 
 	public void setSignals(double borderValue) {
-		for (EndpointFrame e : frames) {
-			if (e.getSample() > borderValue)
-				e.setType(true);
+		for (int i = 10; i < frames.size(); i++) {
+			if (frames.get(i).getSample() > borderValue) {
+				frames.get(i).setType(true);
+				System.out.print(1);
+			} else
+				System.err.print(0);
 		}
-	}
-
-	private double calcualteMeanOfFrames() {
-		double value = 0;
-
-		for (int i = 0; i < 10; i++) {
-			value += frames.get(i).getSample();
-		}
-
-		value /= 10;
-
-		return value;
-	}
-
-	private double calculateStandardDeviation(double mean) {
-		double value = 0;
-
-		for (int i = 0; i < 10; i++) {
-			double dif = Math.pow(frames.get(i).getSample() - mean, 2);
-
-			value += dif;
-		}
-
-		value /= 10;
-
-		return value;
 	}
 
 	public boolean isRead() {

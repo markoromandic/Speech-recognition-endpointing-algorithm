@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Variables {
-	public static final ArrayList<String> WAV_FILES = new ArrayList(Arrays.asList("male1", "male2", "Record sound"));
+	public static final ArrayList<String> WAV_FILES = new ArrayList(
+			Arrays.asList("muski", "male2", "Record sound", "hz"));
 	public static final ArrayList<String> FRAME_FUNCS = new ArrayList(Arrays.asList("None", "Hamming", "Hanning"));
 
 	public static final String READ = "Read";
