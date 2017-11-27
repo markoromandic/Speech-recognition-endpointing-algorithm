@@ -12,6 +12,7 @@ public abstract class Variables {
 	public static final String RECORD = "Record";
 	public static final String EXPORT = "Export";
 	public static final String RECORD_WAV = "Record sound";
+	public static final String CALCUALTE = "Calculate";
 
 	public static final String NONE = "None";
 	public static final String HAMMING = "Hamming";

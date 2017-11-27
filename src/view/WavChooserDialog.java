@@ -11,7 +11,6 @@ import variables.Variables;
 
 public class WavChooserDialog extends HBox {
 	private ComboBox<String> wavSounds;
-	private ComboBox<String> frameFuncs;
 	private Button btRead, btExport;
 	private TextField tfDuration;
 
@@ -25,12 +24,6 @@ public class WavChooserDialog extends HBox {
 		wavSounds.getItems().addAll(Variables.WAV_FILES);
 		wavSounds.getSelectionModel().selectFirst();
 		wavSounds.setMinWidth(100);
-
-		frameFuncs = new ComboBox();
-		frameFuncs.setMaxWidth(100);
-		frameFuncs.getItems().addAll(Variables.FRAME_FUNCS);
-		frameFuncs.getSelectionModel().selectFirst();
-		frameFuncs.setMinWidth(100);
 
 		tfDuration = new TextField();
 		tfDuration.setMinWidth(50);
@@ -50,7 +43,7 @@ public class WavChooserDialog extends HBox {
 		setHgrow(wavSounds, Priority.ALWAYS);
 		setAlignment(Pos.CENTER);
 
-		getChildren().addAll(wavSounds, frameFuncs, tfDuration, btRead, btExport);
+		getChildren().addAll(wavSounds, tfDuration, btRead, btExport);
 	}
 
 	public ComboBox<String> getWavSounds() {
@@ -67,9 +60,5 @@ public class WavChooserDialog extends HBox {
 
 	public TextField getTfDuration() {
 		return tfDuration;
-	}
-
-	public ComboBox<String> getFrameFuncs() {
-		return frameFuncs;
 	}
 }

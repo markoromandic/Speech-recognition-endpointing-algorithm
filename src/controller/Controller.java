@@ -41,9 +41,6 @@ public class Controller {
 			public void handle(ActionEvent event) {
 				String choosenWav = view.getWavChooserDialog().getWavSounds().getSelectionModel().getSelectedItem();
 
-				String choosenFrameFunc = view.getWavChooserDialog().getFrameFuncs().getSelectionModel()
-						.getSelectedItem();
-
 				if (choosenWav.equals(Variables.RECORD_WAV)) {
 					String durationS = view.getWavChooserDialog().getTfDuration().getText();
 					long duration = 1;
@@ -53,11 +50,11 @@ public class Controller {
 
 					model.startRecording(duration);
 
-					model.startReadingWav(Variables.RECORDED_AUDIO, choosenFrameFunc);
+					model.startReadingWav(Variables.RECORDED_AUDIO);
 					if (model.isRead())
 						view.getWavChooserDialog().getBtExport().setDisable(false);
 				} else {
-					model.startReadingWav(choosenWav, choosenFrameFunc);
+					model.startReadingWav(choosenWav);
 					System.out.println("Reading wav");
 				}
 			}
